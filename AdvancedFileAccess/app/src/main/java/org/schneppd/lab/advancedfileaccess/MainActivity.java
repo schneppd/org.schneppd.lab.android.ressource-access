@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +20,27 @@ public class MainActivity extends AppCompatActivity {
 
     // logic to test
     public void TestFeature(View view) {
+        String message = "";
+
+        InputStream inputStream = getResources().openRawResource(R.raw.custom_values);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+
+
+        try{
+            String line = reader.readLine();
+            while (line != null) {
+
+                if(!line.contains("start") && !line.contains("end"))
+                    message += line;
+                line = reader.readLine();
+            }
+            inputStream.close();
+
+        } catch(IOException e) {
+            message += "error " + e.getMessage();
+        }
+
         /*
         LineIterator it = FileUtils.lineIterator(file, "UTF-8");
         try {
@@ -30,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }
         */
         TextView t =(TextView)findViewById(R.id.txtTest);
-        t.setText("Feature tested");
+        t.setText(message);
     }
 
 
